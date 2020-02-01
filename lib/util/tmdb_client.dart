@@ -11,6 +11,8 @@ import 'package:flutter_cinematic/model/tvseason.dart';
 import 'package:flutter_cinematic/util/constants.dart';
 import 'package:logging/logging.dart';
 
+// https://developers.themoviedb.org/3/getting-started/introduction
+
 class TmdbClient {
   static final log = Logger('TmdbClient');
   static final String _baseUrl = 'api.themoviedb.org';
@@ -58,6 +60,8 @@ class TmdbClient {
   }
 
   Future<List<MediaItem>> getMoviesForActor(int actorId) async {
+    // TODO look into getting combined credits
+    // TODO why isn't this using movie_credits?
     final url = Uri.https(_baseUrl, '3/discover/movie', {'api_key': API_KEY, 'with_cast': actorId.toString(), 'sort_by': 'popularity.desc'});
 
     return _getJson(url)

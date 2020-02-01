@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cinematic/model/app_model.dart';
 import 'package:provider/provider.dart';
-
-import 'file:///C:/Users/Neil/Projects/flutter_cinematic/lib/model/app_model.dart';
 
 class ToggleThemeButton extends StatelessWidget {
   const ToggleThemeButton({

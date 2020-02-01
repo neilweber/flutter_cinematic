@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cinematic/model/mediaitem.dart';
 import 'package:flutter_cinematic/util/navigator.dart';
-import 'package:flutter_cinematic/util/utils.dart';
 
 class MediaListItem extends StatelessWidget {
   MediaListItem(this.mediaItem);
@@ -27,7 +26,7 @@ class MediaListItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(top: 4.0),
                   child: Text(
-                    getGenreString(mediaItem.genreIds),
+                    mediaItem.genres.join(', '),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodyText2,

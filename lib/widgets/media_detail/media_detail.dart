@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cinematic/model/app_model.dart';
 import 'package:flutter_cinematic/model/cast.dart';
 import 'package:flutter_cinematic/model/mediaitem.dart';
 import 'package:flutter_cinematic/model/tvseason.dart';
 import 'package:flutter_cinematic/util/mediaprovider.dart';
 import 'package:flutter_cinematic/util/styles.dart';
-import 'package:flutter_cinematic/util/utils.dart';
 import 'package:flutter_cinematic/widgets/media_detail/cast_section.dart';
 import 'package:flutter_cinematic/widgets/media_detail/meta_section.dart';
 import 'package:flutter_cinematic/widgets/media_detail/season_section.dart';
@@ -17,8 +16,7 @@ import 'package:flutter_cinematic/widgets/utilviews/bottom_gradient.dart';
 import 'package:flutter_cinematic/widgets/utilviews/text_bubble.dart';
 import 'package:provider/provider.dart';
 
-import 'file:///C:/Users/Neil/Projects/flutter_cinematic/lib/model/app_model.dart';
-
+// TODO this widget should honor the selected theme
 class MediaDetailScreen extends StatefulWidget {
   MediaDetailScreen(this._mediaItem);
 
@@ -93,11 +91,15 @@ class MediaDetailScreenState extends State<MediaDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: primary,
-        body: CustomScrollView(
-          slivers: <Widget>[
-            _buildAppBar(context, widget._mediaItem),
-            _buildContentSection(widget._mediaItem),
-          ],
+        body: SafeArea(
+          top: true,
+          bottom: false,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              _buildAppBar(context, widget._mediaItem),
+              _buildContentSection(widget._mediaItem),
+            ],
+          ),
         ));
   }
 
@@ -105,6 +107,7 @@ class MediaDetailScreenState extends State<MediaDetailScreen> {
     var appModel = Provider.of<AppModel>(context);
     return SliverAppBar(
       expandedHeight: 240.0,
+      title: Text(widget._mediaItem.title),
       pinned: true,
       actions: <Widget>[
         IconButton(
@@ -155,23 +158,20 @@ class MediaDetailScreenState extends State<MediaDetailScreen> {
               ],
             ),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(mediaItem.title, style: const TextStyle(color: Color(0xFFEEEEEE), fontSize: 20.0)),
+              height: 50.0,
+              child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  children: mediaItem.genres.map((String genre) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(2.0, 0, 2.0, 0),
+                      child: Chip(
+                        label: Text(genre, style: TextStyle(color: Colors.white, fontSize: 12.0)),
+                        backgroundColor: const Color(0xFF424242),
+                      ),
+                    );
+                  }).toList()),
             ),
-            Row(
-              // TODO this occasionally overflows.  See movie Ad Astra.
-              children: getGenresForIds(mediaItem.genreIds)
-                  .sublist(0, min(5, mediaItem.genreIds.length))
-                  .map((String genre) => Row(
-                        children: <Widget>[
-                          TextBubble(genre),
-                          Container(
-                            width: 8.0,
-                          )
-                        ],
-                      ))
-                  .toList(),
-            )
           ],
         ),
       ),

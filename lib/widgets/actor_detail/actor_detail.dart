@@ -10,6 +10,7 @@ import 'package:flutter_cinematic/widgets/media_list/media_list_item.dart';
 import 'package:flutter_cinematic/widgets/utilviews/fitted_circle_avatar.dart';
 import 'package:provider/provider.dart';
 
+// TODO this widget should honor the selected theme
 class ActorDetailScreen extends StatelessWidget {
   ActorDetailScreen(this._actor);
 
@@ -41,7 +42,8 @@ class ActorDetailScreen extends StatelessWidget {
 
   Widget _buildAppBar(BuildContext context, Actor actor) {
     return SliverAppBar(
-      expandedHeight: 240.0,
+      expandedHeight: 210.0,
+      title: Text(actor.name),
       bottom: TabBar(
         tabs: <Widget>[
           const Tab(
@@ -77,16 +79,6 @@ class ActorDetailScreen extends StatelessWidget {
                       backgroundImage: CachedNetworkImageProvider(actor.profilePictureUrl),
                     ),
                   )),
-              Container(
-                height: 8.0,
-              ),
-              Text(
-                actor.name,
-                style: whiteBody.copyWith(fontSize: 22.0),
-              ),
-              Container(
-                height: 16.0,
-              ),
             ],
           ),
         ),

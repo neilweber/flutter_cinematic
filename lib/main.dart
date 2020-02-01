@@ -3,14 +3,13 @@ import 'dart:developer' as developer;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cinematic/app.dart';
+import 'package:flutter_cinematic/model/app_model.dart';
 import 'package:flutter_cinematic/util/mediaprovider.dart';
 import 'package:flutter_cinematic/util/tmdb_client.dart';
 import 'package:logging/logging.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'file:///C:/Users/Neil/Projects/flutter_cinematic/lib/model/app_model.dart';
 
 Future<void> main() async {
   // See https://stackoverflow.com/questions/57689492/flutter-unhandled-exception-servicesbinding-defaultbinarymessenger-was-accesse

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cinematic/model/app_model.dart';
 import 'package:flutter_cinematic/model/mediaitem.dart';
-import 'file:///C:/Users/Neil/Projects/flutter_cinematic/lib/model/app_model.dart';
 import 'package:flutter_cinematic/widgets/media_list/media_list_item.dart';
 import 'package:flutter_cinematic/widgets/utilviews/toggle_theme_widget.dart';
 import 'package:provider/provider.dart';
