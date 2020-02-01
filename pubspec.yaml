@@ -1,0 +1,54 @@
+name: flutter_cinematic
+description: View movie and TV show information.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: 1.14.6
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cached_network_image: ^2.0.0
+  cupertino_icons: ^0.1.0
+  dio: ^3.0.8
+  dio_cache:  # TODO this should reference github, but the dio_cache project doesn't conform to the standard organization
+    path: ../dio_cache/dio_cache
+  flutter_cache_manager: ^1.1.2
+  flutter_launcher_icons: ^0.7.4
+  flutter_search_bar: "^2.0.2"
+  intl: "^0.15.2"
+  logging: ^0.11.4
+  path_provider: ^1.6.0
+  provider: ^4.0.2
+  rxdart: "^0.22.4"
+  shared_preferences: "^0.4.1"
+  url_launcher: "^3.0.0"
+
+dev_dependencies:
+  pedantic: ^1.9.0
+
+# flutter pub run flutter_launcher_icons:main
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/flutter_clapper.png"
+
+# For information on the generic Dart part of this file, see the
+# following page: https://www.dartlang.org/tools/pub/pubspec
+
+# The following section is specific to Flutter.
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/placeholder.jpg
+    - assets/person_placeholder.png
+    - assets/poster_placeholder.jpg
