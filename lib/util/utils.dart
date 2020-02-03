@@ -8,6 +8,10 @@ final sourceFormat = DateFormat('yyyy-MM-dd');
 final dateFormat = DateFormat.yMMMMd('en_US');
 
 String concatListToString(List<dynamic> data, String mapKey) {
+  if (data == null) {
+    return null;
+  }
+
   final buffer = StringBuffer();
   buffer.writeAll(data.map<String>((dynamic map) => map[mapKey]).toList(), ', ');
   return buffer.toString();

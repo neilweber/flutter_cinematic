@@ -17,7 +17,7 @@ class MediaList extends StatefulWidget {
 }
 
 class _MediaListState extends State<MediaList> {
-  static final log = Logger('TmdbClient');
+  static final log = Logger('MediaList');
   final List<MediaItem> _movies = List<MediaItem>();
   int _pageNumber = 1;
   LoadingState _loadingState = LoadingState.LOADING;

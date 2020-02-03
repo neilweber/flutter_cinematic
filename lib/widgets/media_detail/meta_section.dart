@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_cinematic/model/mediaitem.dart';
+import 'package:flutter_cinematic/model/mediaitemdetails.dart';
 import 'package:flutter_cinematic/util/utils.dart';
 
 class MetaSection extends StatelessWidget {
-  MetaSection(this.data);
+  MetaSection(this._mediaItem, this._mediaItemDetails);
 
-  final dynamic data;
+  final MediaItem _mediaItem;
+  final MediaItemDetails _mediaItemDetails;
 
   @override
   Widget build(BuildContext context) {
@@ -18,35 +21,28 @@ class MetaSection extends StatelessWidget {
         Container(
           height: 8.0,
         ),
-        _getSectionOrContainer('Original Title', 'original_title'),
-        _getSectionOrContainer('Original Title', 'original_name'),
-        _getSectionOrContainer('Status', 'status'),
-        _getSectionOrContainer('Runtime', 'runtime', formatterFunction: formatRuntime),
-        _getCollectionSectionOrContainer('Type', 'genres', 'name'),
-        _getCollectionSectionOrContainer('Creators', 'created_by', 'name'),
-        _getCollectionSectionOrContainer('Networks', 'networks', 'name'),
-        (data['number_of_seasons'] != null && data['number_of_episodes'] != null)
-            ? _getMetaInfoSection('Seasons', formatSeasonsAndEpisodes(data['number_of_seasons'], data['number_of_episodes']))
+        _getMetaInfoSection('Original Title', _mediaItemDetails.originalTitle),
+        _getSectionOrContainer('Status', _mediaItemDetails.status),
+        _getSectionOrContainer('Runtime', _mediaItemDetails.runtime, formatterFunction: formatRuntime),
+        _getSectionOrContainer('Genres', _mediaItem.genres?.join(', ')),
+        _getSectionOrContainer('Creators', _mediaItemDetails.creators),
+        _getSectionOrContainer('Networks', _mediaItemDetails.networks),
+        (_mediaItemDetails.numberOfSeasons != null && _mediaItemDetails.numberOfEpisodes != null)
+            ? _getMetaInfoSection('Seasons', formatSeasonsAndEpisodes(_mediaItemDetails.numberOfSeasons, _mediaItemDetails.numberOfEpisodes))
             : Container(),
-        _getSectionOrContainer('Premiere', 'release_date', formatterFunction: formatDate),
-        _getSectionOrContainer('Premiere', 'first_air_date', formatterFunction: formatDate),
-        _getSectionOrContainer('Latest/Next Episode', 'last_air_date', formatterFunction: formatDate),
-        _getSectionOrContainer('Budget', 'budget', formatterFunction: formatNumberToDollars),
-        _getSectionOrContainer('Revenue', 'revenue', formatterFunction: formatNumberToDollars),
-        _getSectionOrContainer('Homepage', 'homepage', isLink: true),
-        _getSectionOrContainer('Imdb', 'imdb_id', formatterFunction: getImdbUrl, isLink: true),
+        _getSectionOrContainer('Premiere', _mediaItemDetails.premiereDate, formatterFunction: formatDate),
+        _getSectionOrContainer('Latest/Next Episode', _mediaItemDetails.lastAirDate, formatterFunction: formatDate),
+        _getSectionOrContainer('Budget', _mediaItemDetails.budget, formatterFunction: formatNumberToDollars),
+        _getSectionOrContainer('Revenue', _mediaItemDetails.revenue, formatterFunction: formatNumberToDollars),
+        _getSectionOrContainer('Homepage', _mediaItemDetails.homepage, isLink: true),
+        _getSectionOrContainer('Imdb', _mediaItemDetails.imdbId, formatterFunction: getImdbUrl, isLink: true),
       ],
     );
   }
 
-  Widget _getCollectionSectionOrContainer(String title, String listKey, String mapKey) {
-    return data[listKey] == null ? Container() : _getMetaInfoSection(title, concatListToString(data[listKey], mapKey));
-  }
-
-  Widget _getSectionOrContainer(String title, String content, {dynamic formatterFunction, bool isLink = false}) {
-    return data[content] == null
-        ? Container()
-        : _getMetaInfoSection(title, formatterFunction != null ? formatterFunction(data[content]) : data[content], isLink: isLink);
+  Widget _getSectionOrContainer(String title, dynamic content, {dynamic formatterFunction, bool isLink = false}) {
+    return content == null ? Container() : _getMetaInfoSection(
+        title, formatterFunction == null ? content : formatterFunction(content), isLink: isLink);
   }
 
   Widget _getMetaInfoSection(String title, String content, {bool isLink = false}) {

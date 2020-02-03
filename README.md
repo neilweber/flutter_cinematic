@@ -2,7 +2,7 @@
 
 This app began as a fork of [Aaron Oertel's](https://github.com/aaronoe) Flutter app [FlutterCinematic](https://github.com/aaronoe/FlutterCinematic).
 That app has not seen any updates since June 2018.  As a learning tool, I decided to copy the entire app, update, and then improve it.
-Some of the initial changes include fixing lint warnings, replacing scoped_model with provider, and caching images. 
+Some of the initial changes include fixing lint warnings, replacing scoped_model with provider, code cleanup, and caching of TMDB responses and images. 
 
 ## Overview
 

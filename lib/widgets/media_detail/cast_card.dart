@@ -25,9 +25,9 @@ class CastCard extends StatelessWidget {
             Hero(
               tag: 'Cast-Hero-${actor.id}',
               child: CachedNetworkImage(
-                placeholder: (context, url) => Image.asset('assets/person_placeholder.png'),
+                placeholder: (context, url) => Image.asset('assets/person_placeholder.png', height: height, width: width, fit: BoxFit.fill),
                 imageUrl: actor.profilePictureUrl,
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
                 height: height,
                 width: width,
               ),

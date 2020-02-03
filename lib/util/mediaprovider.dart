@@ -1,10 +1,9 @@
 import 'dart:async';
 
-import 'package:flutter_cinematic/model/cast.dart';
 import 'package:flutter_cinematic/model/episode.dart';
 import 'package:flutter_cinematic/model/mediaitem.dart';
+import 'package:flutter_cinematic/model/mediaitemdetails.dart';
 import 'package:flutter_cinematic/model/searchresult.dart';
-import 'package:flutter_cinematic/model/tvseason.dart';
 import 'package:flutter_cinematic/util/tmdb_client.dart';
 
 class MediaProvider {
@@ -20,15 +19,7 @@ class MediaProvider {
     }
   }
 
-  Future<List<Actor>> loadCast(MediaItem mediaItem) {
-    return _tmdbClient.getMediaCredits(mediaItem.type, mediaItem.id);
-  }
-
-  Future<List<MediaItem>> getSimilar(MediaItem mediaItem) {
-    return _tmdbClient.getSimilarMedia(mediaItem.type, mediaItem.id);
-  }
-
-  Future<dynamic> getDetails(MediaItem mediaItem) {
+  Future<MediaItemDetails> getDetails(MediaItem mediaItem) {
     return _tmdbClient.getMediaDetails(mediaItem.type, mediaItem.id);
   }
 
@@ -46,9 +37,5 @@ class MediaProvider {
 
   Future<List<Episode>> fetchEpisodes(int showId, int seasonNumber) {
     return _tmdbClient.fetchEpisodes(showId, seasonNumber);
-  }
-
-  Future<List<TvSeason>> getShowSeasons(MediaItem mediaItem) {
-    return _tmdbClient.getShowSeasons(mediaItem.id);
   }
 }

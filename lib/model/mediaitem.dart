@@ -34,17 +34,19 @@ String getGenre(int id) {
   return _genreMap[id] ?? '$id';
 }
 
-List<String> getGenresForIds(List<int> genreIds) => genreIds.map((id) => _genreMap[id]).toList();
-
 class MediaType {
   final String tmdbType;
+  final String titleProperty;
+  final String originalTitleProperty;
+  final String startDateProperty;
 
-  const MediaType(this.tmdbType);
+  const MediaType(this.tmdbType, this.titleProperty, this.originalTitleProperty, this.startDateProperty);
 
-  static const MediaType movie = MediaType('movie');
-  static const MediaType show = MediaType('tv');
+  static const MediaType movie = MediaType('movie', 'title', 'original_title', 'release_date');
+  static const MediaType show = MediaType('tv', 'name', 'original_name', 'first_air_date');
 }
 
+/// This is the basic media item details consisting only of data obtained in the initial query.
 class MediaItem {
   MediaItem._internalFromJson(Map jsonMap, {MediaType type = MediaType.movie})
       : type = type,
@@ -69,6 +71,7 @@ class MediaItem {
   final List<int> genreIds;
   List<String> genres;
 
+  // TODO backdropPath can be null; check for it
   String getBackDropUrl() => getLargePictureUrl(backdropPath);
 
   String getPosterUrl() => getMediumPictureUrl(posterPath);

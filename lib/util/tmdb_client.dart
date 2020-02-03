@@ -3,11 +3,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache/dio_cache.dart';
-import 'package:flutter_cinematic/model/cast.dart';
 import 'package:flutter_cinematic/model/episode.dart';
 import 'package:flutter_cinematic/model/mediaitem.dart';
+import 'package:flutter_cinematic/model/mediaitemdetails.dart';
 import 'package:flutter_cinematic/model/searchresult.dart';
-import 'package:flutter_cinematic/model/tvseason.dart';
 import 'package:flutter_cinematic/util/constants.dart';
 import 'package:logging/logging.dart';
 
@@ -27,15 +26,15 @@ class TmdbClient {
       options: CacheOptions(store: fileCacheStore),
     ));
 
-    var expiration = DateTime.now().subtract(Duration(days: 1));
+    var expiration = DateTime.now().subtract(Duration(days: 7));
     log.info('Deleting cached responses with expirations before $expiration');
     fileCacheStore.evictExpiredEntries(expiration);
   }
 
   Future<dynamic> _getJson(Uri uri) async {
-    final Stopwatch stopwatch = Stopwatch()..start();
+//    final Stopwatch stopwatch = Stopwatch()..start();
     final response = (await _dio.get(uri.toString())).data;
-    stopwatch.stop();
+//    stopwatch.stop();
 //    log.info('GET $uri; elapsed: ${stopwatch.elapsed}; length: ${response.length}');
 //    print('GET $uri; elapsed: ${stopwatch.elapsed}; length: ${response.length}');
     return response;
@@ -49,16 +48,6 @@ class TmdbClient {
         .then((dynamic data) => data.map<MediaItem>((dynamic item) => MediaItem(item, MediaType.movie)).toList());
   }
 
-  Future<List<MediaItem>> getSimilarMedia(MediaType mediaType, int mediaId) async {
-    final url = Uri.https(_baseUrl, '3/${mediaType.tmdbType}/$mediaId/similar', {
-      'api_key': API_KEY,
-    });
-
-    return _getJson(url)
-        .then<dynamic>((dynamic json) => json['results'])
-        .then((dynamic data) => data.map<MediaItem>((dynamic item) => MediaItem(item, mediaType)).toList());
-  }
-
   Future<List<MediaItem>> getMoviesForActor(int actorId) async {
     // TODO look into getting combined credits
     // TODO why isn't this using movie_credits?
@@ -70,30 +59,17 @@ class TmdbClient {
   }
 
   Future<List<MediaItem>> getShowsForActor(int actorId) async {
-    final url = Uri.https(_baseUrl, '3/person/$actorId/tv_credits', {
-      'api_key': API_KEY,
-    });
+    final url = Uri.https(_baseUrl, '3/person/$actorId/tv_credits', {'api_key': API_KEY});
 
     return _getJson(url)
         .then<dynamic>((dynamic json) => json['cast'])
         .then((dynamic data) => data.map<MediaItem>((dynamic item) => MediaItem(item, MediaType.show)).toList());
   }
 
-  Future<List<Actor>> getMediaCredits(MediaType mediaType, int mediaId) async {
-    final url = Uri.https(_baseUrl, '3/${mediaType.tmdbType}/$mediaId/credits', {'api_key': API_KEY});
+  Future<MediaItemDetails> getMediaDetails(MediaType mediaType, int mediaId) async {
+    final url = Uri.https(_baseUrl, '3/${mediaType.tmdbType}/$mediaId', {'api_key': API_KEY, 'append_to_response': 'credits,similar,seasons'});
 
-    return _getJson(url).then((dynamic json) => json['cast'].map<Actor>((dynamic item) => Actor.fromJson(item)).toList());
-  }
-
-  Future<dynamic> getMediaDetails(MediaType mediaType, int mediaId) async {
-    final url = Uri.https(_baseUrl, '3/${mediaType.tmdbType}/$mediaId&append_to_response=credits,similar,seasons', {'api_key': API_KEY});
-
-    return _getJson(url);
-  }
-
-  Future<List<TvSeason>> getShowSeasons(int showId) async {
-    final dynamic detailJson = await getMediaDetails(MediaType.show, showId);
-    return detailJson['seasons'].map<TvSeason>((dynamic item) => TvSeason.fromMap(item)).toList();
+    return _getJson(url).then<MediaItemDetails>((dynamic json) => MediaItemDetails(mediaType, json));
   }
 
   Future<List<SearchResult>> getSearchResults(String query) {
@@ -111,9 +87,7 @@ class TmdbClient {
   }
 
   Future<List<Episode>> fetchEpisodes(int showId, int seasonNumber) {
-    final url = Uri.https(_baseUrl, '3/tv/$showId/season/$seasonNumber', {
-      'api_key': API_KEY,
-    });
+    final url = Uri.https(_baseUrl, '3/tv/$showId/season/$seasonNumber', {'api_key': API_KEY});
 
     return _getJson(url)
         .then<dynamic>((dynamic json) => json['episodes'])

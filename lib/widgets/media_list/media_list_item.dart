@@ -96,6 +96,7 @@ class MediaListItem extends StatelessWidget {
               child: Hero(
                 child: CachedNetworkImage(
                   placeholder: (context, url) => Image.asset('assets/placeholder.jpg'),
+                  // TODO backdrop path can be null, check for it
                   imageUrl: mediaItem.getBackDropUrl(),
                   fit: BoxFit.cover,
                   width: double.infinity,

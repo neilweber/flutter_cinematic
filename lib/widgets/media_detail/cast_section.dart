@@ -24,11 +24,12 @@ class CastSection extends StatelessWidget {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: _cast
-                .map((Actor actor) => Padding(
+                ?.map((Actor actor) =>
+                Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: CastCard(actor),
                     ))
-                .toList(),
+                ?.toList(),
           ),
         )
       ],
