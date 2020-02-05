@@ -25,27 +25,32 @@ class TmdbClient {
       logger: log,
       options: CacheOptions(store: fileCacheStore),
     ));
+    _dio.interceptors.add(LogInterceptor());
 
-    var expiration = DateTime.now().subtract(Duration(days: 7));
-    log.info('Deleting cached responses with expirations before $expiration');
-    fileCacheStore.evictExpiredEntries(expiration);
+    var cutoff = DateTime.now().subtract(Duration(days: 7));
+    log.info('Deleting cached responses before $cutoff');
+    fileCacheStore.deleteOldEntries(cutoff);
   }
 
   Future<dynamic> _getJson(Uri uri) async {
-//    final Stopwatch stopwatch = Stopwatch()..start();
+    final stopwatch = Stopwatch()
+      ..start();
     final response = (await _dio.get(uri.toString())).data;
-//    stopwatch.stop();
-//    log.info('GET $uri; elapsed: ${stopwatch.elapsed}; length: ${response.length}');
-//    print('GET $uri; elapsed: ${stopwatch.elapsed}; length: ${response.length}');
+    stopwatch.stop();
+    log.info('GET $uri; elapsed: ${stopwatch.elapsed}');
     return response;
   }
 
-  Future<List<MediaItem>> fetchMovies({int page = 1, String category = 'popular'}) async {
-    final url = Uri.https(_baseUrl, '3/movie/$category', {'api_key': API_KEY, 'page': page.toString()});
+  Future<List<MediaItem>> fetchMedia(MediaType mediaType, {int page = 1, String category = 'popular'}) async {
+    final uri = Uri.https(_baseUrl, '3/${mediaType.tmdbType}/$category', {'api_key': API_KEY, 'page': page.toString()});
 
-    return _getJson(url)
-        .then<dynamic>((dynamic json) => json['results'])
-        .then((dynamic data) => data.map<MediaItem>((dynamic item) => MediaItem(item, MediaType.movie)).toList());
+    return _getJson(uri).then<dynamic>((dynamic json) => json['results']).then((dynamic data) {
+      final stopwatch = Stopwatch()
+        ..start();
+      var list = data.map<MediaItem>((dynamic item) => MediaItem(item, mediaType)).toList();
+      log.info('Parsing $uri; elapsed: ${stopwatch.elapsed}; length: ${list.length}');
+      return list;
+    });
   }
 
   Future<List<MediaItem>> getMoviesForActor(int actorId) async {
@@ -76,14 +81,6 @@ class TmdbClient {
     final url = Uri.https(_baseUrl, '3/search/multi', {'api_key': API_KEY, 'query': query});
 
     return _getJson(url).then((dynamic json) => json['results'].map<SearchResult>((dynamic item) => SearchResult.fromJson(item)).toList());
-  }
-
-  Future<List<MediaItem>> fetchShows({int page = 1, String category = 'popular'}) async {
-    final url = Uri.https(_baseUrl, '3/tv/$category', {'api_key': API_KEY, 'page': page.toString()});
-
-    return _getJson(url)
-        .then<dynamic>((dynamic json) => json['results'])
-        .then((dynamic data) => data.map<MediaItem>((dynamic item) => MediaItem(item, MediaType.show)).toList());
   }
 
   Future<List<Episode>> fetchEpisodes(int showId, int seasonNumber) {

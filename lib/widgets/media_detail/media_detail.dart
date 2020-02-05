@@ -151,10 +151,7 @@ class MediaDetailScreenState extends State<MediaDetailScreen> {
       future: mediaProvider.getDetails(widget._mediaItem),
       builder: (BuildContext context, AsyncSnapshot<MediaItemDetails> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // TODO how to center the progress indicator in the remaining space?
-          return SliverList(
-              delegate: SliverChildListDelegate.fixed(
-                  <Widget>[Padding(padding: const EdgeInsets.all(20), child: Center(child: const CircularProgressIndicator()))]));
+          return SliverFillRemaining(child: Center(child: const CircularProgressIndicator()));
         }
 
         // TODO need to check for error

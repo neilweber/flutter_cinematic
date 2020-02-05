@@ -27,7 +27,7 @@ class _MediaListState extends State<MediaList> {
     _isLoading = true;
     try {
       final MediaProvider mediaProvider = Provider.of<MediaProvider>(context, listen: false);
-      final nextMovies = await mediaProvider.loadMedia(widget.mediaType, widget.category, page: _pageNumber);
+      final nextMovies = await mediaProvider.loadMedia(widget.mediaType, widget.category, _pageNumber);
       setState(() {
         _loadingState = LoadingState.DONE;
         _movies.addAll(nextMovies);
@@ -41,7 +41,7 @@ class _MediaListState extends State<MediaList> {
       // This error might indicate a memory leak if setState() is being called because another object is retaining a reference to this State object after it has been removed from the tree. To avoid memory leaks, consider breaking the reference to this object during dispose().
       // See https://stackoverflow.com/questions/17552757/is-there-any-way-to-cancel-a-dart-future
       // And https://dart.academy/how_cancel_future/
-      log.warning('Error loading next page', e);
+      log.warning('Error loading next page: ${e}', e);
       _isLoading = false;
       if (_loadingState == LoadingState.LOADING) {
         setState(() => _loadingState = LoadingState.ERROR);

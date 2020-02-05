@@ -11,12 +11,8 @@ class MediaProvider {
 
   MediaProvider(this._tmdbClient);
 
-  Future<List<MediaItem>> loadMedia(MediaType mediaType, String category, {int page = 1}) {
-    if (mediaType == MediaType.movie) {
-      return _tmdbClient.fetchMovies(category: category, page: page);
-    } else {
-      return _tmdbClient.fetchShows(category: category, page: page);
-    }
+  Future<List<MediaItem>> loadMedia(MediaType mediaType, String category, int page) {
+    return _tmdbClient.fetchMedia(mediaType, category: category, page: page);
   }
 
   Future<MediaItemDetails> getDetails(MediaItem mediaItem) {
